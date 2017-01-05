@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heqing.dao.TestDao">
+
+   <resultMap id="testResult" type="Test" >
+        <result column="t_id" property="id"></result>
+        <result column="t_name" property="name"></result>   
+   </resultMap>
+
+    <insert id="save" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into test (name) values (#{name})
+    </insert>
+
+    <update id="update" parameterType="test">
+        update test set name = #{name}
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        delete from test where id = #{id}
+    </delete>
+
+    <select id="getById" parameterType="Long" resultMap="testResult">
+        select t.id t_id,t.name t_name from test t where id = #{id} 
+    </select>
+    
+    <select id="getByIds" parameterType="Long[]" resultMap="testResult">
+        select t.id t_id,t.name t_name from test t where id in
+	    <foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
+	        #{item}   
+	    </foreach>  
+    </select>
+
+    <select id="findAll" resultMap="testResult">
+        select t.id t_id,t.name t_name from test t 
+    </select>
+
+	<select id="getPageBean"  resultMap="testResult">
+        select t.id t_id,t.name t_name from test t where t.id limit #{0} , #{1} 
+    </select>
+</mapper>
